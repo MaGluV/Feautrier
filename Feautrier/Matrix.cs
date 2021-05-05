@@ -114,7 +114,7 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
-        public static Matrix operator *(Matrix mtx, float a)
+        public static Matrix operator *(float a, Matrix mtx)
         {
         	float[,] new_mtx = mtx.GetValues();
         	int new_n = mtx.GetHeight();
