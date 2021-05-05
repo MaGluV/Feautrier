@@ -11,7 +11,7 @@ namespace Feautrier
         {
         	this.mtx = Mtx;
         	this.n = Mtx.GetLength(0);
-        	this.m = Mtx.GetLength(0);
+        	this.m = Mtx.GetLength(1);
         }
         
         public Matrix(int nsize)
