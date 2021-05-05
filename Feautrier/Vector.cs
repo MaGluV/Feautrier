@@ -69,6 +69,7 @@ namespace Feautrier
         	int l = mtx.getHeight();
         	int m = v.GetSize();
         	int i;
+        	int j;
         	for(i=0; i<l; i++)
         	{
         		new_vec[i] = 0;
@@ -76,6 +77,18 @@ namespace Feautrier
         		{
         			new_vec[i] += mas1[i,j]*mas2[j];
         		}
+        	}
+        	return new Vector(new_vec);
+        }
+        
+        public static Vector operator *(float a, Vector v)
+        {
+        	float[] new_vec = v.GetValues();
+        	int m = v.GetSize();
+        	int i;
+        	for(i=0; i<m; i++)
+        	{
+        		new_vec[i] *= a;
         	}
         	return new Vector(new_vec);
         }
