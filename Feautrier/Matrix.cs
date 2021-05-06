@@ -144,7 +144,7 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
-        public static Matrix Reverse(Matrix mtx)
+        public static Matrix GSReverse(Matrix mtx)
         {
         	float[,] new_mtx;
         	float[,] mas = mtx.GetValue();
@@ -190,6 +190,64 @@ namespace Feautrier
     	    	s = Math.Pow(s, 0.5)
     	    }
     	    new_mtx = x;
+        	return new Matrix(new_mtx);
+        }
+        
+        public static Matrix GReverse(Matrix mtx)
+        {
+        	float[,] new_mtx;
+        	float[,] mas = mtx.GetValue();
+        	int new_n = mtx.GetHeight();
+        	Matrix E = new Matrix(new_n);
+        	float[,] e = E.GetValue();
+        	float coef;
+        	float max;
+        	int index;
+        	int i;
+        	int j;
+        	int k;
+        	for(k=0; k<new_n-1; j++)
+        	{
+        		max = -1e10
+        		for(i=k; i<new_n; i++)
+        		{
+        			if (max < mas[i,k])
+        			{
+        				max = mas[i,k];
+        				index = i;
+        			}
+        		}
+        		for(j=0; j<new_n; j++)
+        		{
+        			mas[index,j] -= mas[k,j];
+        			mas[k,j] += mas[index,j];
+        			mas[index,j] = mas[k,j] - mas[index,j];
+        			e[index,j] -= e[k,j];
+        			e[k,j] += e[index,j];
+        			e[index,j] = e[k,j] - e[index,j];
+        		}
+        		for(i=k+1; i<new_n; i++)
+        		{
+        			coef = mas[i,k]/mas[k,k];
+        			for(j=k+1; j<new_n; j++)
+        			{
+        				mas[i,j] -= coef*mas[k,j];
+        				e[i,j] -= coef*e[k,j];
+        			}
+        		}
+        	}
+        	for(j=0; j<new_n; j++)
+        	{
+        		for(i=new_n-1; i>-1; i--)
+        		{
+        			coef = 0;
+        			for(k=i+1; k<new_n; k++)
+        			{
+        				coef += mas[i,k]*new_mtx[k,j]/mas[i,i];
+        			}
+        			new_mtx[i,j] = b[i,j]/mas[i,i] - coef;
+        		}
+        	}
         	return new Matrix(new_mtx);
         }
     }
