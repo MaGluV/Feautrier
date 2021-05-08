@@ -87,6 +87,37 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
+        public MtxPrint()
+        {
+        	int i;
+        	int j;
+        	for(i=0; i<this.n; i++)
+			{
+	            for (j=0; j<this.m; j++)
+	            {
+	                Console.Write(string.Format("{0} ", this.mtx[i, j]));
+	            }
+	            Console.Write(Environment.NewLine + Environment.NewLine);
+	        }
+        }
+        
+        public static bool operator == (Matrix m1, Matrix m2)
+        {
+        	bool boo = True;
+        	int h = m1.GetHeight();
+        	int w = m1.Width();
+        	float[] mas1 = m1.GetValues();
+        	float[] mas2 = m2.GetValues();
+        	int i;
+        	int j;
+        	for(i=0; i<h; i++)
+        	{
+        		for(j=0; j<w; j++)
+        		boo &= (mas1[i,j] == mas2[i,j]);
+        	}
+        	return boo;
+        }
+        
         public static Matrix operator -(matrix m1, Matrix m2) => m1 + (-m2);
         
         public static Matrix operator *(Matrix mtx1, Matrix mtx2)

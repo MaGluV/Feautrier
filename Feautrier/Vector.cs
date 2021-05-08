@@ -37,6 +37,20 @@ namespace Feautrier
         	return new Vector(new_vec);
         }
         
+        public static bool operator ==(Vector v1, Vector v2)
+        {
+        	bool boo = True;
+        	int m = v1.GetSize();
+        	float[] mas1 = v1.GetValues();
+        	float[] mas2 = v2.GetValues();
+        	int i;
+        	for(i=0; i<m; i++)
+        	{
+        		boo &= (mas1[i] == mas2[i]);
+        	}
+        	return boo;
+        }
+        
         public static Vector operator +(Vector v1, Vector v2)
         {
         	float[] new_vec;
