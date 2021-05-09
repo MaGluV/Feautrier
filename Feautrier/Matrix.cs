@@ -3,11 +3,11 @@ namespace Feautrier
 {
     public class Matrix
     {	
-    	private float[,] mtx;
+    	private double[,] mtx;
     	private int n;
     	private int m;
     	
-        public Matrix(float[,] Mtx)
+        public Matrix(double[,] Mtx)
         {
         	this.mtx = Mtx;
         	this.n = Mtx.GetLength(0);
@@ -16,6 +16,7 @@ namespace Feautrier
         
         public Matrix(int nsize)
         {
+            this.mtx = new double[nsize, nsize];
         	this.n = nsize;
         	int i;
         	int j;
@@ -36,26 +37,26 @@ namespace Feautrier
         	}
         }
         
-        public GetVaues()
+        public double[,] GetValues()
         {
         	return this.mtx;
         }
         
-        public GetHeight()
+        public int GetHeight()
         {
         	return this.n;
         }
         
-        public GetWidth()
+        public int GetWidth()
         {
         	return this.m;
         }
         
         public static Matrix operator -(Matrix mtx)
         {
-        	float[,] new_mtx = mtx.GetValues();
+        	double[,] new_mtx = mtx.GetValues();
         	int new_n = mtx.GetHeight();
-        	int new_m = mtx.GetWigth();
+        	int new_m = mtx.GetWidth();
         	int i;
         	int j;
         	for(i=0; i<new_n; i++)
@@ -69,13 +70,13 @@ namespace Feautrier
         }
         
         public static Matrix operator +(Matrix mtx1, Matrix mtx2)
-        {
-        	float[,] new_mtx 
-        	float[,] mas1 = mtx1.GetValues();
-        	float[,] mas2 = mtx2.GetValues();
+        { 
+        	double[,] mas1 = mtx1.GetValues();
+        	double[,] mas2 = mtx2.GetValues();
         	int new_n = mtx1.GetHeight();
-        	int new_m = mtx1.GetWigth();
-        	int i;
+        	int new_m = mtx1.GetWidth();
+            double[,] new_mtx = new double[new_n, new_m];
+            int i;
         	int j;
         	for(i=0; i<new_n; i++)
         	{
@@ -87,7 +88,7 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
-        public MtxPrint()
+        public void MtxPrint()
         {
         	int i;
         	int j;
@@ -95,7 +96,7 @@ namespace Feautrier
 			{
 	            for (j=0; j<this.m; j++)
 	            {
-	                Console.Write(string.Format("{0} ", this.mtx[i, j]));
+	                Console.Write(string.Format("{0:f8} ", this.mtx[i, j]));
 	            }
 	            Console.Write(Environment.NewLine + Environment.NewLine);
 	        }
@@ -103,11 +104,11 @@ namespace Feautrier
         
         public static bool operator == (Matrix m1, Matrix m2)
         {
-        	bool boo = True;
+        	bool boo = true;
         	int h = m1.GetHeight();
-        	int w = m1.Width();
-        	float[] mas1 = m1.GetValues();
-        	float[] mas2 = m2.GetValues();
+        	int w = m1.GetWidth();
+        	double[,] mas1 = m1.GetValues();
+        	double[,] mas2 = m2.GetValues();
         	int i;
         	int j;
         	for(i=0; i<h; i++)
@@ -117,17 +118,65 @@ namespace Feautrier
         	}
         	return boo;
         }
-        
-        public static Matrix operator -(matrix m1, Matrix m2) => m1 + (-m2);
-        
+
+        public override bool Equals(Object mtx)
+        {
+            if ((mtx == null) || !this.GetType().Equals(mtx.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Matrix p = (Matrix)mtx;
+                Matrix current_mtx = new Matrix(this.mtx); 
+                return current_mtx == p;
+            }
+        }
+
+        public static bool operator !=(Matrix m1, Matrix m2)
+        {
+            bool boo = false;
+            int h = m1.GetHeight();
+            int w = m1.GetWidth();
+            double[,] mas1 = m1.GetValues();
+            double[,] mas2 = m2.GetValues();
+            int i;
+            int j;
+            for (i = 0; i < h; i++)
+            {
+                for (j = 0; j < w; j++)
+                    boo = boo || (mas1[i, j] != mas2[i, j]);
+            }
+            return boo;
+        }
+
+        public static Matrix operator -(Matrix mtx1, Matrix mtx2)
+        {
+            double[,] mas1 = mtx1.GetValues();
+            double[,] mas2 = mtx2.GetValues();
+            int new_n = mtx1.GetHeight();
+            int new_m = mtx1.GetWidth();
+            double[,] new_mtx = new double[new_n, new_m];
+            int i;
+            int j;
+            for (i = 0; i < new_n; i++)
+            {
+                for (j = 0; j < new_m; j++)
+                {
+                    new_mtx[i, j] = mas1[i, j] - mas2[i, j];
+                }
+            }
+            return new Matrix(new_mtx);
+        }
+
         public static Matrix operator *(Matrix mtx1, Matrix mtx2)
         {
-        	float[,] new_mtx 
-        	float[,] mas1 = mtx1.GetValues();
-        	float[,] mas2 = mtx2.GetValues();
+        	double[,] mas1 = mtx1.GetValues();
+        	double[,] mas2 = mtx2.GetValues();
         	int new_n = mtx1.GetHeight();
-        	int new_m = mtx2.GetWigth();
-        	int l = mtx1.GetWigth();
+        	int new_m = mtx2.GetWidth();
+            double[,] new_mtx = new double[new_n, new_m];
+            int l = mtx1.GetWidth();
         	int i;
         	int j;
         	int k;
@@ -145,11 +194,11 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
-        public static Matrix operator *(float a, Matrix mtx)
+        public static Matrix operator *(double a, Matrix mtx)
         {
-        	float[,] new_mtx = mtx.GetValues();
+        	double[,] new_mtx = mtx.GetValues();
         	int new_n = mtx.GetHeight();
-        	int new_m = mtx.GetWigth();
+        	int new_m = mtx.GetWidth();
         	int i;
         	int j;
         	for(i=0; i<new_n; i++)
@@ -162,40 +211,48 @@ namespace Feautrier
         	return new Matrix(new_mtx);
         }
         
-        public static Matrix DiagReverse(Matrix mtx)
+        public Matrix DiagReverse()
         {
-        	float[,] new_mtx;
-        	float[,] mas = mtx.GetValue();
-        	int new_n = mtx.GetHeight();
+            double[,] new_mtx = new double[this.n,this.n];
         	int i;
-        	for(i=0; i<new_n; i++)
+        	for(i=0; i < this.n; i++)
         	{
-        		new_mtx[i,i] = 1/mtx[i,i];
+        		new_mtx[i,i] = 1/this.mtx[i,i];
         	}
         	return new Matrix(new_mtx);
         }
         
-        public static Matrix GSReverse(Matrix mtx)
+        public Matrix GSReverse()
         {
-        	float[,] new_mtx;
-        	float[,] mas = mtx.GetValue();
-        	int new_n = mtx.GetHeight();
-        	Matrix E = new Matrix(new_n);
-        	float[,] e = E.GetValue();
-        	float[,] x0 = E.GetValue();
-        	float[,] x;
-        	float coef0;
-        	float coef;
-        	float s = 1;
+        	Matrix E = new Matrix(this.n);
+            double[,] mas = new double[this.n, this.n];
+            double[,] e = E.GetValues();
+        	double[,] x0 = new double[this.n, this.n];
+        	double[,] x = new double[this.n, this.n];
+        	double coef0;
+        	double coef;
+        	double s = 1;
         	int i;
         	int j;
         	int k;
-        	while (s > 0.000001)
+            for (i = 0; i < this.n; i++)
+            {
+                for (j = 0; j < this.n; j++)
+                {
+                    mas[i, j] = this.mtx[i, j];
+                    x0[i, j] = 0.1;
+                }
+            }
+
+            while (s > 0.000001)
         	{
         		s = 0;
-	        	for(j=0; j<new_n; j++)
+                Matrix testm = new Matrix(x0);
+                testm.MtxPrint();
+                Console.WriteLine("--------------");
+	        	for(j=0; j<this.n; j++)
     	    	{
-    	    		for(i=0; i<new_n; i++)
+    	    		for(i=0; i<this.n; i++)
     	    		{
     	    			coef = 0;
     	    			coef0 = 0;
@@ -203,82 +260,108 @@ namespace Feautrier
     	    			{
     	    				for(k=0; k<i; k++)
     	    				{
-    	    					coef += mas[i,k]*x[k,j]/a[i,i];
+    	    					coef += mas[i,k]*x[k,j]/mas[i,i];
     	    				}
     	    			}
-    	    			if (i < new_n-1)
+    	    			if (i < this.n-1)
     	    			{
-    	    				for(k=i+1; k<new_n; k++)
+    	    				for(k=i+1; k<this.n; k++)
     	    				{
-    	    					coef0 += mas[i,k]*x0[k,j]/a[i,i];
+    	    					coef0 += mas[i,k]*x0[k,j]/ mas[i,i];
     	    				}
     	    			}
-    	    			x[i,j] = e[i,j]/mas[i,i] - coef - coef0;
+    	    			x[i,j] = e[i,j]/ mas[i,i] - coef - coef0;
     	    			s += Math.Pow(x[i,j] - x0[i,j], 2.0);
     	    		}	
     	    	}
     	    	x0 = x;
-    	    	s = Math.Pow(s, 0.5)
+                s = Math.Pow(s, 0.5);
     	    }
-    	    new_mtx = x;
-        	return new Matrix(new_mtx);
+        	return new Matrix(x);
         }
         
-        public static Matrix GReverse(Matrix mtx)
+        public Matrix GReverse()
         {
-        	float[,] new_mtx;
-        	float[,] mas = mtx.GetValue();
-        	int new_n = mtx.GetHeight();
-        	Matrix E = new Matrix(new_n);
-        	float[,] e = E.GetValue();
-        	float coef;
-        	float max;
-        	int index;
+            double[,] mas = new double[this.n, this.n];
+            double[,] new_mtx = new double[this.n, this.n];
+        	Matrix E = new Matrix(this.n);
+        	double[,] e = E.GetValues();
+        	double coef;
+        	double max;
+        	int max_index;
         	int i;
         	int j;
         	int k;
-        	for(k=0; k<new_n-1; j++)
+            for (i=0; i < this.n; i++)
+            {
+                for (j = 0; j < this.n; j++)
+                {
+                    mas[i, j] = this.mtx[i, j];
+                }
+            }
+
+        	for(k=0; k<(this.n-1); k++)
         	{
-        		max = -1e10
-        		for(i=k; i<new_n; i++)
+                max = -1e10;
+                max_index = 0;
+                for (i=k; i< this.n; i++)
         		{
         			if (max < mas[i,k])
         			{
         				max = mas[i,k];
-        				index = i;
-        			}
+        				max_index = i;
+                    }
         		}
-        		for(j=0; j<new_n; j++)
+                
+
+        		for(j=0; j< this.n; j++)
         		{
-        			mas[index,j] -= mas[k,j];
-        			mas[k,j] += mas[index,j];
-        			mas[index,j] = mas[k,j] - mas[index,j];
-        			e[index,j] -= e[k,j];
-        			e[k,j] += e[index,j];
-        			e[index,j] = e[k,j] - e[index,j];
+                    if (max_index != k)
+                    {
+                        mas[max_index, j] -= mas[k, j];
+                        mas[k, j] += mas[max_index, j];
+                        mas[max_index, j] = mas[k, j] - mas[max_index, j];
+                        e[max_index, j] -= e[k, j];
+                        e[k, j] += e[max_index, j];
+                        e[max_index, j] = e[k, j] - e[max_index, j];
+                    }
         		}
-        		for(i=k+1; i<new_n; i++)
+
+                for (i=0; i<this.n; i++)
+                {
+                    if (mas[i, i] == 0)
+                    {
+                        throw new ArgumentException("Diagonal elemets equal to 0!");
+                    }
+                }
+
+        		for(i=k+1; i< this.n; i++)
         		{
         			coef = mas[i,k]/mas[k,k];
-        			for(j=k+1; j<new_n; j++)
-        			{
-        				mas[i,j] -= coef*mas[k,j];
-        				e[i,j] -= coef*e[k,j];
+
+                    for (j = k; j < this.n; j++)
+                    {
+                        mas[i, j] -= coef * mas[k, j];
+                    }
+                    for (j = 0; j < this.n; j++)
+                    {
+                        e[i,j] -= coef*e[k,j];
         			}
-        		}
-        	}
-        	for(j=0; j<new_n; j++)
+                }
+            }
+
+        	for(j=0; j<this.n; j++)
         	{
-        		for(i=new_n-1; i>-1; i--)
+        		for(i=this.n-1; i>-1; i--)
         		{
         			coef = 0;
-        			for(k=i+1; k<new_n; k++)
+        			for(k=i+1; k<this.n; k++)
         			{
         				coef += mas[i,k]*new_mtx[k,j]/mas[i,i];
         			}
-        			new_mtx[i,j] = b[i,j]/mas[i,i] - coef;
-        		}
-        	}
+        			new_mtx[i,j] = e[i,j]/mas[i,i] - coef;
+                }
+            }
         	return new Matrix(new_mtx);
         }
     }

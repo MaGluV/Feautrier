@@ -3,46 +3,53 @@ namespace Feautrier
 {
     public class Vector
     {
-    	private float[] vec;
-    	private int n;
-    	
-        public Vector(float[] Vec)
+        private double[] vec;
+        private int n;
+
+        public Vector(double[] Vec)
         {
-        	vec = Vec;
-        	n = Vec.Length;
+            vec = Vec;
+            n = Vec.Length;
         }
-        
+
         public Vector(int n)
         {
-        	int i;
-        	for(i=0; i<n; i++){vec[i] = 0;}
+            int i;
+            for (i = 0; i < n; i++) { vec[i] = 0; }
         }
-        
-        public GetValues()
+
+        public double[] GetValues()
         {
         	return this.vec;
         }
         
-        public GetSize()
+        public int GetSize()
         {
         	return this.n;
         }
-        
+        public void VecPrint()
+        {
+            int i;
+            for (i = 0; i < this.n; i++)
+            {
+                Console.Write(string.Format("{0:f8} ", this.vec[i]));
+            }
+        }
         public static Vector operator -(Vector v)
         {
-        	float[] new_vec = v.GetValues();
+        	double[] new_vec = v.GetValues();
         	int m = v.GetSize();
         	int i;
         	for(i=0; i<m; i++){new_vec[i] = -new_vec[i];}
         	return new Vector(new_vec);
         }
         
-        public static bool operator ==(Vector v1, Vector v2)
+        public static bool operator == (Vector v1, Vector v2)
         {
-        	bool boo = True;
+        	bool boo = true;
         	int m = v1.GetSize();
-        	float[] mas1 = v1.GetValues();
-        	float[] mas2 = v2.GetValues();
+        	double[] mas1 = v1.GetValues();
+        	double[] mas2 = v2.GetValues();
         	int i;
         	for(i=0; i<m; i++)
         	{
@@ -50,25 +57,48 @@ namespace Feautrier
         	}
         	return boo;
         }
-        
+
+        public static bool operator !=(Vector v1, Vector v2)
+        {
+            bool boo = false;
+            int m = v1.GetSize();
+            double[] mas1 = v1.GetValues();
+            double[] mas2 = v2.GetValues();
+            int i;
+            for (i = 0; i < m; i++)
+            {
+                boo = boo || (mas1[i] != mas2[i]);
+            }
+            return boo;
+        }
+
         public static Vector operator +(Vector v1, Vector v2)
         {
-        	float[] new_vec;
-        	float[] mas1 = v1.GetValues();
-        	float[] mas2 = v2.GetValues();
+        	double[] mas1 = v1.GetValues();
+        	double[] mas2 = v2.GetValues();
         	int m = v1.GetSize();
-        	int i;
+            double[] new_vec = new double[m];
+            int i;
         	for(i=0; i<m; i++){new_vec[i] = mas1[i] + mas2[i];}
         	return new Vector(new_vec);
         }
-        
-        public static Vector operator -(Vector v1, Vector v2) => v1 + (-v2);
-        
-        public static float operator *(Vector v1, Vector v2)
+
+        public static Vector operator -(Vector v1, Vector v2)
         {
-        	float mul=0;
-        	float[] mas1 = v1.GetValues();
-        	float[] mas2 = v2.GetValues();
+            double[] mas1 = v1.GetValues();
+            double[] mas2 = v2.GetValues();
+            int m = v1.GetSize();
+            double[] new_vec = new double[m];
+            int i;
+            for (i = 0; i < m; i++) { new_vec[i] = mas1[i] - mas2[i]; }
+            return new Vector(new_vec);
+        }
+
+        public static double operator *(Vector v1, Vector v2)
+        {
+        	double mul=0;
+        	double[] mas1 = v1.GetValues();
+        	double[] mas2 = v2.GetValues();
         	int m = v1.GetSize();
         	int i;
         	for(i=0; i<m; i++){mul += mas1[i]*mas2[i];}
@@ -77,12 +107,13 @@ namespace Feautrier
         
         public static Vector operator *(Matrix mtx, Vector v)
         {
-        	float[] new_vec;
-        	float[,] mas1 = mtx.GetValues();
-        	float[] mas2 = v.GetValues();
-        	int l = mtx.getHeight();
+        	
+        	double[,] mas1 = mtx.GetValues();
+        	double[] mas2 = v.GetValues();
+        	int l = mtx.GetHeight();
         	int m = v.GetSize();
-        	int i;
+            double[] new_vec = new double[l];
+            int i;
         	int j;
         	for(i=0; i<l; i++)
         	{
@@ -95,9 +126,9 @@ namespace Feautrier
         	return new Vector(new_vec);
         }
         
-        public static Vector operator *(float a, Vector v)
+        public static Vector operator *(double a, Vector v)
         {
-        	float[] new_vec = v.GetValues();
+        	double[] new_vec = v.GetValues();
         	int m = v.GetSize();
         	int i;
         	for(i=0; i<m; i++)
