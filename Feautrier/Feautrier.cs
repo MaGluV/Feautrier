@@ -42,25 +42,41 @@ namespace Feautrier
         	
         	dtau = taus[1] - taus[0];
         	this.TauMu[0,0] = this.NearBoundary(mu, dtau);
-        	this.TauMu[0,1] = - this.MtxCreate(mu, dtau);
+        	this.TauMu[0,1] = - this.LUMtxCreate(mu, dtau);
         	this.SourceFunc[0] = 0.5*source[0]*this.SourceFunc[0];
         	dtau = taus[this.t-1] - taus[this.t-2];
         	this.TauMu[this.t-1,this.t-1] = this.FarBoundary(mu, dtau);
-        	this.TauMu[this.t-1,this.t-2] = - this.MtxCreate(mu, dtau);
+        	this.TauMu[this.t-1,this.t-2] = - this.LUMtxCreate(mu, dtau);
         	this.SourceFunc[this.t-1] = 0.5*source[this.t-1]*this.SourceFunc[this.t-1];
         	
         	for(i=1; i<this.t-1; i++)
         	{
         		dtau = taus[i] - taus[i-1];
-        		this.TauMu[i,i-1] = - this.MtxCreate(mu, dtau);
+        		this.TauMu[i,i-1] = - this.LUMtxCreate(mu, dtau);
         		this.TauMu[i,i] = new Matrix(this.mu);
-        		this.TauMu[i,i] = this.TauMu[i,i] + 2.0*this.MtxCreate(mu, dtau);
-        		this.TauMu[i,i+1] = - this.MtxCreate(mu, dtau);
+        		this.TauMu[i,i] = this.TauMu[i,i] + 2.0*this.DiagMtxCreate(mu, dtau);
+        		this.TauMu[i,i+1] = - this.LUMtxCreate(mu, dtau);
         		this.SourceFunc[i] = source[i]*this.SourceFunc[i];
         	}
         }
         
-        private Matrix MtxCreate(double[] mu, double dtau)
+        private Matrix LUMtxCreate(double[] mu, double dtau)
+        {
+        	double[,] mtx = new double[this.m, this.m];
+        	int i;
+        	
+        	for(i=0; i<this.m; i++)
+        	{
+        		for(i=0; i<this.m; i++)
+        		{
+	        		mtx[i,j] = 0;
+	        	}
+	        	mtx[i,i] = Math.Pow(mu[i]/dtau, 2.0);
+	        }
+	        return new Matrix(mtx);
+        }
+        
+        private Matrix DiagMtxCreate(double[] mu, double dtau)
         {
         	double[,] mtx = new double[this.m, this.m];
         	int i;
