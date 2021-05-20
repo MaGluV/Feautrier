@@ -188,5 +188,37 @@ namespace Feautrier
         	
         	return Flux;
         }
+	    
+	public double[] Flux_NK(Vector[] u, double h, double[] tau)
+        {
+            Vector[] v = new Vector[this.t];
+            double[] Flux = new double[this.t];
+            double[] vmas;
+            int n = this.t;
+            double sum;
+            int i;
+            int k;
+
+            v[0] = (1.0 / (2.0 * (tau[1] - tau[0]))) * (4 * u[1] - 3 * u[0] - u[2]);
+            for (i = 1; i < n - 1; i++)
+            {
+                v[i] = (1.0 / (2.0 * (tau[i + 1] - tau[i]))) * (u[i + 1] - u[i - 1]);
+            }
+            v[n - 1] = (1.0 / (2.0 * (tau[n - 1] - tau[n - 2]))) * (3 * u[n - 1] + u[n - 3] - 4 * u[n - 2]);
+
+            for (i = 0; i < n; i++)
+            {
+                sum = 0;
+                vmas = v[i].GetValues();
+                for (k = 1; k < this.m; k++)
+                {
+                    sum += h * (vmas[i] + vmas[i - 1]) / 2.0
+                }
+                Flux[i] = sum;
+            }
+
+            return Flux;
+        }
     }
 }
+
