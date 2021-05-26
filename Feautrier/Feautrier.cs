@@ -19,7 +19,7 @@ namespace Feautrier
         	double[] v = new double[this.m];
         	double dtau;
             this.SourceFunc = new Vector[this.t];
-            this.TauMu = new Matrix[this.t, this.t];
+            this.TauMu = new Matrix[this.t, 3];
         	
         	for(i=0; i<this.m; i++)
         	{
