@@ -33,7 +33,7 @@ namespace Feautrier
         	for(i=0; i<this.t; i++)
         	{
         		this.SourceFunc[i] = new Vector(v);
-        		for(k=0; k<this.t; k++)
+        		for(k=0; k<3; k++)
         		{
         			this.TauMu[i,k] = new Matrix(mtx);
         		}
@@ -44,17 +44,17 @@ namespace Feautrier
         	this.TauMu[0,1] = - this.LUMtxCreate(mu, dtau);
         	this.SourceFunc[0] = 0.5*source[0]*this.SourceFunc[0];
         	dtau = taus[this.t-1] - taus[this.t-2];
-        	this.TauMu[this.t-1,this.t-1] = this.FarBoundary(mu, dtau);
-        	this.TauMu[this.t-1,this.t-2] = - this.LUMtxCreate(mu, dtau);
+        	this.TauMu[this.t-1,2] = this.FarBoundary(mu, dtau);
+        	this.TauMu[this.t-1,1] = - this.LUMtxCreate(mu, dtau);
         	this.SourceFunc[this.t-1] = 0.5*source[this.t-1]*this.SourceFunc[this.t-1];
         	
         	for(i=1; i<this.t-1; i++)
         	{
         		dtau = taus[i] - taus[i-1];
-        		this.TauMu[i,i-1] = - this.LUMtxCreate(mu, dtau);
-        		this.TauMu[i,i] = new Matrix(this.m);
-        		this.TauMu[i,i] = this.TauMu[i,i] + 2.0*this.DiagMtxCreate(mu, dtau);
-        		this.TauMu[i,i+1] = - this.LUMtxCreate(mu, dtau);
+        		this.TauMu[i,0] = - this.LUMtxCreate(mu, dtau);
+        		this.TauMu[i,1] = new Matrix(this.m);
+        		this.TauMu[i,1] = this.TauMu[i,i] + 2.0*this.DiagMtxCreate(mu, dtau);
+        		this.TauMu[i,2] = - this.LUMtxCreate(mu, dtau);
         		this.SourceFunc[i] = source[i]*this.SourceFunc[i];
         	}
         }
@@ -141,14 +141,14 @@ namespace Feautrier
         	beta[0] = this.TauMu[0,0].DiagReverse() * this.SourceFunc[0];
         	for(i=1; i<n-1; i++)
         	{
-        		denominator = this.TauMu[i,i-1]*alpha[i-1] + this.TauMu[i,i];
-        		numerator = this.SourceFunc[i] - (this.TauMu[i, i-1]*beta[i-1]);
-        		alpha[i] = - (denominator.DiagReverse() * this.TauMu[i,i+1]);
+        		denominator = this.TauMu[i,0]*alpha[i-1] + this.TauMu[i,1];
+        		numerator = this.SourceFunc[i] - (this.TauMu[i, 0]*beta[i-1]);
+        		alpha[i] = - (denominator.DiagReverse() * this.TauMu[i,2]);
         		beta[i] = denominator.DiagReverse() * numerator;
         	}
         	
-        	numerator = this.SourceFunc[n-1] - (this.TauMu[n-1,n-2]*beta[n-2]);
-			denominator = this.TauMu[n-1,n-1] + (this.TauMu[n-1,n-2]*alpha[n-2]);
+        	numerator = this.SourceFunc[n-1] - (this.TauMu[n-1,1]*beta[n-2]);
+			denominator = this.TauMu[n-1,n-1] + (this.TauMu[n-1,1]*alpha[n-2]);
 			u[n-1] = denominator.DiagReverse() * numerator;
         	for(i=n-2; i>-1; i--)
         	{
@@ -179,7 +179,7 @@ namespace Feautrier
         	{
         		sum = 0;
         		vmas = v[i].GetValues();
-        		for(k=0; k<this.m; k++)
+        		for(k=this.m/2; k<this.m; k++)
         		{
         			sum += w[k]*vmas[k]*Math.Pow(mu[k],2.0);
         		}
@@ -189,7 +189,7 @@ namespace Feautrier
         	return Flux;
         }
 	    
-	public double[] Flux_NK(Vector[] u, double h, double[] tau)
+	public double[] Flux_NK(Vector[] u, double[] mu, double[] tau)
         {
             Vector[] v = new Vector[this.t];
             double[] Flux = new double[this.t];
@@ -198,6 +198,7 @@ namespace Feautrier
             double sum;
             int i;
             int k;
+            double h;
 
             v[0] = (1.0 / (2.0 * (tau[1] - tau[0]))) * (4 * u[1] - 3 * u[0] - u[2]);
             for (i = 1; i < n - 1; i++)
@@ -210,9 +211,9 @@ namespace Feautrier
             {
                 sum = 0;
                 vmas = v[i].GetValues();
-                for (k = 1; k < this.m; k++)
+                for (k = this.m/2+1; k < this.m; k++)
                 {
-                    sum += h * (vmas[i] + vmas[i - 1]) / 2.0
+                    sum += (mu[k] - mu[k-1]) * (vmas[k] + vmas[k - 1]) / 2.0;
                 }
                 Flux[i] = sum;
             }
