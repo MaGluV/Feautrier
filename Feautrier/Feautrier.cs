@@ -53,7 +53,7 @@ namespace Feautrier
         		dtau = taus[i] - taus[i-1];
         		this.TauMu[i,0] = - this.LUMtxCreate(mu, dtau);
         		this.TauMu[i,1] = new Matrix(this.m);
-        		this.TauMu[i,1] = this.TauMu[i,i] + 2.0*this.DiagMtxCreate(mu, dtau);
+        		this.TauMu[i,1] = this.TauMu[i,1] + 2.0*this.DiagMtxCreate(mu, dtau);
         		this.TauMu[i,2] = - this.LUMtxCreate(mu, dtau);
         		this.SourceFunc[i] = source[i]*this.SourceFunc[i];
         	}
