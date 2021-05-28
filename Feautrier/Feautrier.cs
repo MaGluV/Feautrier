@@ -148,7 +148,7 @@ namespace Feautrier
         	}
         	
         	numerator = this.SourceFunc[n-1] - (this.TauMu[n-1,1]*beta[n-2]);
-			denominator = this.TauMu[n-1,n-1] + (this.TauMu[n-1,1]*alpha[n-2]);
+			denominator = this.TauMu[n-1,2] + (this.TauMu[n-1,1]*alpha[n-2]);
 			u[n-1] = denominator.DiagReverse() * numerator;
         	for(i=n-2; i>-1; i--)
         	{
