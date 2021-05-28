@@ -18,6 +18,7 @@ namespace Feautrier
         {
             this.mtx = new double[nsize, nsize];
         	this.n = nsize;
+		this.m = nsize;
         	int i;
         	int j;
         	
