@@ -198,7 +198,6 @@ namespace Feautrier
             double sum;
             int i;
             int k;
-            double h;
 
             v[0] = (1.0 / (2.0 * (tau[1] - tau[0]))) * (4 * u[1] - 3 * u[0] - u[2]);
             for (i = 1; i < n - 1; i++)
