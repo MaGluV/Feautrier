@@ -57,10 +57,10 @@ namespace ColMod
             this.SourceFunc[0] = 0.5 * SourceInit(source[0], dtu, dtu, dt);
             //this.SourceFunc[0] = 0.5 * source[0] * this.SourceFunc[0];
 
-            for (i = 0; i < this.m; i++) dt[i] = dtauL[i][this.t-1]; //dtaus[i][this.t-1];
+            for (i = 0; i < this.m; i++) dt[i] = dtauL[i][this.t-2]; //dtaus[i][this.t-1];
             this.TauMu[this.t - 1, 1] = this.FarBoundary(mu, dt);
             for (i = 0; i < this.m; i++) dt[i] = 1.0; //dtauL[i][this.t - 2];
-            for (i = 0; i < this.m; i++) dtl[i] = dtauL[i][this.t-1];
+            for (i = 0; i < this.m; i++) dtl[i] = dtauL[i][this.t-2];
             this.TauMu[this.t - 1, 0] = -this.LUMtxCreate(mu, dt); // dt
             this.SourceFunc[this.t - 1] = 0.5 * SourceInit(source[this.t - 1], dtl, dtl, dt);
             //this.SourceFunc[this.t - 1] = 0.5 * source[this.t - 1] * this.SourceFunc[this.t - 1];
