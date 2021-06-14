@@ -82,7 +82,7 @@ namespace ColMod
             }
         }
         
-        private Vector SourceInit(double s, double[] dtau, double[] dtau1, double[] dtau1)
+        private Vector SourceInit(double s, double[] dtau, double[] dtau1, double[] dtau2)
         {
         	double[] S = new double[this.m];
         	for (int i = 0; i < this.m; i++) S[i] = dtau[i]*dtau1[i]*dtau2[i]*s;
